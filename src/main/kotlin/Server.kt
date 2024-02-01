@@ -7,7 +7,8 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.bish.routes.*
+import org.bish.routes.reminderRouting
+import org.bish.routes.taskRouting
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -24,10 +25,8 @@ private fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello, world!", ContentType.Text.Html)
         }
-        customerRouting()
-        listOrdersRoute()
-        getOrderRoute()
-        totalizeOrderRoute()
+        reminderRouting()
+        taskRouting()
     }
 }
 

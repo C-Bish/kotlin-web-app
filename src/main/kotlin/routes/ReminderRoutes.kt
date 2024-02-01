@@ -5,16 +5,19 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.bish.models.Customer
-import org.bish.models.customerStorage
+import org.bish.models.Reminder
+import org.bish.models.reminderStorage
 
-fun Route.customerRouting() {
-    route("/customer") {
+/*
+* Defines CRUD operations for the Reminder domain
+*/
+fun Route.reminderRouting() {
+    route("/reminder") {
         get {
-            if (customerStorage.isNotEmpty()) {
-                call.respond(customerStorage)
+            if (reminderStorage.isNotEmpty()) {
+                call.respond(reminderStorage)
             } else {
-                call.respondText("No customers found", status = HttpStatusCode.OK)
+                call.respondText("No reminders found", status = HttpStatusCode.OK)
             }
         }
 
@@ -24,23 +27,23 @@ fun Route.customerRouting() {
                 status = HttpStatusCode.BadRequest
             )
             val customer =
-                customerStorage.find { it.id == id } ?: return@get call.respondText(
-                    "No customer with id $id",
+                reminderStorage.find { it.id == id } ?: return@get call.respondText(
+                    "No reminder with id $id",
                     status = HttpStatusCode.NotFound
                 )
             call.respond(customer)
         }
 
         post {
-            val customer = call.receive<Customer>()
-            customerStorage.add(customer)
-            call.respondText("Customer stored correctly", status = HttpStatusCode.Created)
+            val reminder = call.receive<Reminder>()
+            reminderStorage.add(reminder)
+            call.respondText("Reminder stored correctly", status = HttpStatusCode.Created)
         }
 
         delete("{id?}") {
             val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
-            if (customerStorage.removeIf { it.id == id }) {
-                call.respondText("Customer removed correctly", status = HttpStatusCode.Accepted)
+            if (reminderStorage.removeIf { it.id == id }) {
+                call.respondText("Reminder removed correctly", status = HttpStatusCode.Accepted)
             } else {
                 call.respondText("Not Found", status = HttpStatusCode.NotFound)
             }
