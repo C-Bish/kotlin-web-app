@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Reminder(val id: String, val description: String, val date: LocalDateTime)
+data class Reminder(override val id: String, val description: String, val date: LocalDateTime) : Model
 
 val reminderStorage = mutableListOf(
     Reminder(

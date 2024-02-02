@@ -7,6 +7,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.bish.routes.eventRouting
 import org.bish.routes.reminderRouting
 import org.bish.routes.taskRouting
 
@@ -27,6 +28,7 @@ private fun Application.configureRouting() {
         }
         reminderRouting()
         taskRouting()
+        eventRouting()
     }
 }
 

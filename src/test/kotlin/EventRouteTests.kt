@@ -10,11 +10,12 @@ import kotlinx.serialization.json.jsonArray
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class ReminderRouteTests {
+
+class EventRouteTests {
 
     @Test
-    fun testGetReminders() = testApplication {
-        val response = client.get("/reminder")
+    fun testGetEvents() = testApplication {
+        val response = client.get("/event")
         assert(
             Json.parseToJsonElement(response.body()).jsonArray.isNotEmpty()
         )
@@ -22,55 +23,55 @@ class ReminderRouteTests {
     }
     
     @Test
-    fun testGetReminder() = testApplication {
-        val response = client.get("/reminder/1234")
+    fun testGetEvent() = testApplication {
+        val response = client.get("/event/2222")
         assertEquals(
-            """{"id":"1234","description":"Take the washing out","date":"2024-02-07T20:29:32"}""",
+            """{"id":"2222","description":"Appointment","date":"2024-02-19T11:00"}""",
             response.bodyAsText()
         )
         assertEquals(HttpStatusCode.OK, response.status)
     }
 
     @Test
-    fun testAddReminder() = testApplication {
-        // Post new reminder
-        val putResponse = client.post("/reminder") {
+    fun testAddEvent() = testApplication {
+        // Post new event
+        val putResponse = client.post("/event") {
             contentType(ContentType.Application.Json)
-            setBody("""{"id":"111","description":"Complete testing","date":"2024-02-05T21:00:00"}""")
+            setBody("""{"id":"111","description":"Birthday party","date":"2024-02-05T17:00:00"}""")
         }
 
         // Assertions on post response
-        assertEquals("Reminder saved correctly", putResponse.bodyAsText())
+        assertEquals("Event saved correctly", putResponse.bodyAsText())
         assertEquals(HttpStatusCode.Created, putResponse.status)
 
-        // Get new reminder
-        val getResponse = client.get("/reminder/111")
+        // Get new event
+        val getResponse = client.get("/event/111")
         assertEquals(HttpStatusCode.OK, getResponse.status)
     }
 
     @Test
-    fun testDeleteReminder() = testApplication {
+    fun testDeleteEvent() = testApplication {
 
-        // Get list of reminders
-        val getResponse = client.get("/reminder")
-        val reminders = Json.parseToJsonElement(getResponse.body()).jsonArray.size
+        // Get list of events
+        val getResponse = client.get("/event")
+        val events = Json.parseToJsonElement(getResponse.body()).jsonArray.size
 
         // Assertions on obtained list
         assertEquals(HttpStatusCode.OK, getResponse.status)
 
-        // Delete reminder
-        val deleteResponse = client.delete("/reminder/6789")
+        // Delete event
+        val deleteResponse = client.delete("/event/1111")
 
         // Assertions on delete response
-        assertEquals("Reminder removed correctly", deleteResponse.bodyAsText())
+        assertEquals("Event removed correctly", deleteResponse.bodyAsText())
         assertEquals(HttpStatusCode.Accepted, deleteResponse.status)
 
-        // Get list of reminders
-        val getResponse2 = client.get("/reminder")
+        // Get list of events
+        val getResponse2 = client.get("/event")
 
         // Assertions on obtained list
         assertEquals(
-            reminders - 1,
+            events - 1,
             Json.parseToJsonElement(getResponse2.body()).jsonArray.size
         )
         assertEquals(HttpStatusCode.OK, getResponse2.status)

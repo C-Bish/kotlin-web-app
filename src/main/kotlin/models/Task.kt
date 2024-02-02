@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Task(val id: String, val description: String, val dueDate: LocalDateTime)
+data class Task(override val id: String, val description: String, val dueDate: LocalDateTime) : Model
 
 val taskStorage = mutableListOf(
     Task(
